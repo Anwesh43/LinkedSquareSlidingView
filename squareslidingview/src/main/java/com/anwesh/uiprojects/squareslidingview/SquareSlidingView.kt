@@ -27,4 +27,30 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
-fun Float.divideScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+fun Int.sf() : Float = 1f - 2 * this
+
+fun Canvas.drawSSNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = foreColor
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(180f * sc2)
+    for (j in 0..(squares - 1)) {
+        val endY : Float = -(size / 2) * j.sf()
+        val x : Float = -size * j.sf()
+        val y : Float = (size / 2) * sc1.divideScale(j, squares) * j.sf()
+        save()
+        translate(-size * i * size, y)
+        drawLine(x, endY, x, endY - y, paint)
+        drawRect(RectF(-size, -size / 2, 0f, size / 2), paint)
+
+        restore()
+    }
+    restore()
+}
