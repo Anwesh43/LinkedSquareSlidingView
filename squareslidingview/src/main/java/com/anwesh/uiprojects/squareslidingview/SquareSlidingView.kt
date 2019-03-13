@@ -38,6 +38,8 @@ fun Canvas.drawSSNode(i : Int, scale : Float, paint : Paint) {
     val sc1 : Float = scale.divideScale(0, 2)
     val sc2 : Float = scale.divideScale(1, 2)
     paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
     save()
     translate(w / 2, gap * (i + 1))
     rotate(180f * sc2)
@@ -45,11 +47,10 @@ fun Canvas.drawSSNode(i : Int, scale : Float, paint : Paint) {
         val endY : Float = -(size / 2) * j.sf()
         val x : Float = -size * j.sf()
         val y : Float = (size / 2) * sc1.divideScale(j, squares) * j.sf()
+        drawLine(x, endY, x, endY + y, paint)
         save()
-        translate(-size * i * size, y)
-        drawLine(x, endY, x, endY - y, paint)
+        translate(size * j, y)
         drawRect(RectF(-size, -size / 2, 0f, size / 2), paint)
-
         restore()
     }
     restore()
