@@ -211,4 +211,12 @@ class SquareSlidingView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : SquareSlidingView {
+            val view : SquareSlidingView = SquareSlidingView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
