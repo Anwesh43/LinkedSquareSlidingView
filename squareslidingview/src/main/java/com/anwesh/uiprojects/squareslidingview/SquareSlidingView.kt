@@ -187,4 +187,26 @@ class SquareSlidingView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : SquareSlidingView) {
+
+        private val animator : Animator = Animator(view)
+        private val ss : SquareSliding = SquareSliding(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            ss.draw(canvas, paint)
+            animator.animate {
+                ss.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            ss.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
